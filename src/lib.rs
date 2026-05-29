@@ -156,7 +156,7 @@ pub fn validate_block_height(height: i64) -> (bool, String) {
     if height >= 1 && height <= 1_000_000 {
         return (true, "Valid block height".to_string());
     } else {
-        return (None, None)
+        return (false, "invalid".to_string());
     }
 
 }
