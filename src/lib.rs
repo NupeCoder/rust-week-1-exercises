@@ -153,10 +153,12 @@ pub fn validate_block_height(height: i64) -> (bool, String) {
     // TODO: Check that height is not negative
     // TODO: Check that height is within a realistic range (<= 1_000_000)
     // TODO: Return (true, "Valid block height") otherwise
-    if height >= 1 && height <= 1_000_000 {
-        return (true, "Valid block height".to_string());
+    if height < 0 {
+        return (false, "negative number".to_string());
+    } else if height <= 1_000_000 {
+        return (false, "unrealistic number".to_string());
     } else {
-        return (false, "invalid".to_string());
+        return (true, "Valid block height".to_string());
     }
 
 }
