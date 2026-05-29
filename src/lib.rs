@@ -155,12 +155,11 @@ pub fn validate_block_height(height: i64) -> (bool, String) {
     // TODO: Return (true, "Valid block height") otherwise
     if height < 0 {
         return (false, "negative number".to_string());
-    } else if height <= 1_000_000 {
+    } else if height > 1_000_000 {
         return (false, "unrealistic number".to_string());
     } else {
         return (true, "Valid block height".to_string());
     }
-
 }
 
 /// Compute the block reward (in sats) for each block height based on the halving schedule.
