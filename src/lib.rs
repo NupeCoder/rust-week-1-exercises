@@ -104,7 +104,7 @@ pub fn find_high_fee(fee_list: &[f64]) -> Option<(usize, f64)> {
     // TODO: Iterate with enumerate and return the first (index, fee) where fee > 0.005
     for (index, fee) in fee_list.iter().enumerate() {
         if *fee > 0.005 {
-            return Some(index, *fee);
+            return Some((index, *fee));
         }
     }
 
