@@ -71,7 +71,7 @@ pub fn is_mainnet(network: &str) -> bool {
 /// Return true if value is in the inclusive range 100..=200.
 pub fn is_in_range(value: i64) -> bool {
     // TODO: Check if 100 <= value <= 200
-    if 100 <= value <= 200 {
+    if 100 <= value && value <= 200 {
         return true
     } else {
         return false
