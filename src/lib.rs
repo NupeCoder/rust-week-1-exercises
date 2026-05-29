@@ -18,8 +18,8 @@ pub struct Utxo {
 /// Calculate the total Bitcoin reward for a given number of mined blocks.
 pub fn calculate_total_reward(blocks_mined: u64) -> f64 {
     // TODO: Multiply blocks_mined by MINING_REWARD and return result
-    let result = MINING_REWARD * blocks_mined;
-    return blocks_mined;
+    let result: f64 = MINING_REWARD * blocks_mined as f64;
+    return result;
 }
 
 /// Return true if the transaction fee is between 0.00001 and 0.01 BTC.
@@ -103,8 +103,8 @@ pub fn add_utxo(utxos: Vec<Utxo>, new_utxo: Utxo) -> Vec<Utxo> {
 pub fn find_high_fee(fee_list: &[f64]) -> Option<(usize, f64)> {
     // TODO: Iterate with enumerate and return the first (index, fee) where fee > 0.005
     for (index, fee) in fee_list.iter().enumerate() {
-        if fee > 0.005 {
-            return (index, fee);
+        if *fee > 0.005 {
+            return Some(index, *fee);
         }
     }
 
@@ -114,13 +114,13 @@ pub fn find_high_fee(fee_list: &[f64]) -> Option<(usize, f64)> {
 /// Return basic wallet details as a tuple of (name, balance).
 pub fn get_wallet_details() -> (String, f64) {
     // TODO: Return a tuple with wallet name and balance
-    return ("Wallet name", 0.001);
+    return ("Wallet name".to_string(), 0.001);
 }
 
 /// Get the status of a transaction from the mempool or "not found".
 pub fn get_tx_status(tx_pool: &HashMap<String, String>, txid: &str) -> String {
     // TODO: Look up txid in tx_pool, returning the status or "not found"
-    if tx_pool.contains_value(txid) {
+    if tx_pool.contains_key(txid) {
         return tx_pool.get(txid);
     }
 
@@ -154,8 +154,11 @@ pub fn validate_block_height(height: i64) -> (bool, String) {
     // TODO: Check that height is within a realistic range (<= 1_000_000)
     // TODO: Return (true, "Valid block height") otherwise
     if height >= 1 && height <= 1_000_000 {
-        return (true, "Valid block height");
+        return (true, "Valid block height".to_string());
+    } else {
+        return (None, None)
     }
+
 }
 
 /// Compute the block reward (in sats) for each block height based on the halving schedule.
@@ -166,8 +169,8 @@ pub fn halving_schedule(blocks: &[u64]) -> HashMap<u64, u64> {
     let base_reward = 50 * BTC_TO_SATS;
     let results = HashMap::new();
     for block in blocks {
-        halvings = block / 210_000;
-        results.insert(block, base_reward / halvings);
+        let halvings = block / 210_000;
+        results.insert(*block, base_reward / halvings);
     }
 
     return results;
