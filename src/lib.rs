@@ -46,8 +46,9 @@ pub fn is_large_balance(balance: f64) -> bool {
 pub fn tx_priority(size_bytes: u64, fee_btc: f64) -> &'static str {
     // TODO: Calculate fee rate (fee_btc / size_bytes) and use if/else if/else
     // High: > 0.00005, Medium: > 0.00001, otherwise Low
-    let fee_rate = fee_btc / size_bytes;
+    let fee_rate = fee_btc / size_bytes as f64;
     
+
     if fee_rate > 0.00005 {
         return "high";
     } else if fee_rate > 0.00001 {
