@@ -62,9 +62,9 @@ pub fn is_mainnet(network: &str) -> bool {
     // TODO: Convert network to lowercase and compare with "mainnet"
     let network_lowercase = network.to_lowercase();
     if network_lowercase == "mainnet" {
-        return true
+        return true;
     } else {
-        return false
+        return false;
     }
 }
 
@@ -72,9 +72,9 @@ pub fn is_mainnet(network: &str) -> bool {
 pub fn is_in_range(value: i64) -> bool {
     // TODO: Check if 100 <= value <= 200
     if 100 <= value && value <= 200 {
-        return true
+        return true;
     } else {
-        return false
+        return false;
     }
 }
 
