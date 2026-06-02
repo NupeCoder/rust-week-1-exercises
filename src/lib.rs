@@ -243,12 +243,11 @@ pub fn create_utxo(
 
 // Implement extract_tx_version function below
 pub fn extract_tx_version(raw_tx_hex: &str) -> Result<u32, String> {
-     if raw_tx_hex.len() < 8 {
+    if raw_tx_hex.len() < 8 {
         return Err("Transaction data too short".to_string());
     }
 
     let version_hex = &raw_tx_hex[0..8];
-
 
     let bytes = [
         u8::from_str_radix(&version_hex[0..2], 16).map_err(|_| "Hex decode error".to_string())?,
@@ -257,6 +256,5 @@ pub fn extract_tx_version(raw_tx_hex: &str) -> Result<u32, String> {
         u8::from_str_radix(&version_hex[6..8], 16).map_err(|_| "Hex decode error".to_string())?,
     ];
 
-
-    return Ok(u32::from_le_bytes(bytes))
+    return Ok(u32::from_le_bytes(bytes));
 }
