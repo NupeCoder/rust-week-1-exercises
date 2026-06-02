@@ -81,7 +81,7 @@ pub fn is_in_range(value: i64) -> bool {
 /// Return true if both references point to the exact same object in memory.
 pub fn is_same_wallet<T>(wallet1: &T, wallet2: &T) -> bool {
     // TODO: Use std::ptr::eq to compare reference identity
-    return std::ptr::eq(&wallet1, &wallet2);
+    return std::ptr::eq(wallet1, wallet2);
 }
 
 /// Normalize a Bitcoin address by trimming whitespace and lowercasing.
@@ -150,7 +150,21 @@ pub fn calculate_sats(btc: f64) -> u64 {
 pub fn generate_address(prefix: &str) -> String {
     // TODO: Build a random suffix of (32 - prefix.len()) chars from [a-z0-9]
     // TODO: Concatenate prefix + suffix and return
-    todo!()
+    use rand::Rng;
+
+    let chars = b"abcdefghijklmnopqrstuvwxyz0123456789";
+
+    let suffix_len = 32 - prefix.len();
+    let mut rng = rand::thread_rng();
+
+    let mut address = String::from(prefix);
+
+    for _ in 0..suffix_len {
+        let index = rng.gen_range(0..chars.len());
+        address.push(chars[index] as char);
+    }
+
+    return address;
 }
 
 /// Validate a Bitcoin block height. Returns (is_valid, message).
@@ -187,17 +201,24 @@ pub fn halving_schedule(blocks: &[u64]) -> HashMap<u64, u64> {
 pub fn find_utxo_with_min_value(utxos: &[Utxo], target: u64) -> Option<Utxo> {
     // TODO: Filter UTXOs to those with value >= target
     // TODO: Return the one with the smallest value, or None if none qualify
-    
-    // let mut current_lowest: Option<Utxo> = None;
+    let mut current_lowest: Option<Utxo> = None;
 
-    // for utxo in utxos {
-    //     if utxo.value >= target{
-    //         current_lowest = utxo
-    //     }
-    // }
+    for utxo in utxos {
+        if utxo.value >= target {
+            match &current_lowest {
+                Some(lowest) => {
+                    if utxo.value < lowest.value {
+                        current_lowest = Some(utxo.clone());
+                    }
+                }
+                None => {
+                    current_lowest = Some(utxo.clone());
+                }
+            }
+        }
+    }
 
-    // if current lowest has not changed return None
-    todo!()
+    return current_lowest;
 }
 
 /// Create a UTXO map from txid, vout, and arbitrary extra string fields.
@@ -208,10 +229,34 @@ pub fn create_utxo(
 ) -> HashMap<String, String> {
     // TODO: Build a base map with "txid" and "vout" (as string)
     // TODO: Merge extra into the base map and return
-    todo!()
+    let mut base_map = HashMap::new();
+
+    base_map.insert("txid".to_string(), txid.to_string());
+    base_map.insert("vout".to_string(), vout.to_string());
+
+    for (key, value) in extra {
+        base_map.insert(key, value);
+    }
+
+    return base_map;
 }
 
 // Implement extract_tx_version function below
 pub fn extract_tx_version(raw_tx_hex: &str) -> Result<u32, String> {
-    todo!()
+     if raw_tx_hex.len() < 8 {
+        return Err("Transaction data too short".to_string());
+    }
+
+    let version_hex = &raw_tx_hex[0..8];
+
+
+    let bytes = [
+        u8::from_str_radix(&version_hex[0..2], 16).map_err(|_| "Hex decode error".to_string())?,
+        u8::from_str_radix(&version_hex[2..4], 16).map_err(|_| "Hex decode error".to_string())?,
+        u8::from_str_radix(&version_hex[4..6], 16).map_err(|_| "Hex decode error".to_string())?,
+        u8::from_str_radix(&version_hex[6..8], 16).map_err(|_| "Hex decode error".to_string())?,
+    ];
+
+
+    return Ok(u32::from_le_bytes(bytes))
 }
