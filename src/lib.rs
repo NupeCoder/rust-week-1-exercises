@@ -124,9 +124,7 @@ pub fn get_tx_status(tx_pool: &HashMap<String, String>, txid: &str) -> String {
     if let Some(status) = tx_pool.get(txid) {
         return status.clone();
     }
-
-    return "not found".to_string()
-
+    return "not found".to_string();
 }
 
 /// Destructure wallet_info and format a status string.
