@@ -95,6 +95,7 @@ pub fn normalize_address(address: &str) -> String {
 /// Append a new UTXO to the list and return the updated list.
 pub fn add_utxo(utxos: Vec<Utxo>, new_utxo: Utxo) -> Vec<Utxo> {
     // TODO: Push new_utxo into utxos and return it
+    let mut utxos = utxos;
     utxos.push(new_utxo);
     return utxos;
 }
@@ -114,24 +115,28 @@ pub fn find_high_fee(fee_list: &[f64]) -> Option<(usize, f64)> {
 /// Return basic wallet details as a tuple of (name, balance).
 pub fn get_wallet_details() -> (String, f64) {
     // TODO: Return a tuple with wallet name and balance
-    return ("Wallet name".to_string(), 0.001);
+    return ("satoshi_wallet".to_string(), 50.0);
 }
 
 /// Get the status of a transaction from the mempool or "not found".
 pub fn get_tx_status(tx_pool: &HashMap<String, String>, txid: &str) -> String {
     // TODO: Look up txid in tx_pool, returning the status or "not found"
-    if tx_pool.contains_key(txid) {
-        return tx_pool.get(txid);
+    if let Some(status) = tx_pool.get(txid) {
+        return status.clone();
     }
 
-    return None;
+    return "not found".to_string()
+
 }
 
 /// Destructure wallet_info and format a status string.
 pub fn unpack_wallet_info(wallet_info: (String, f64)) -> String {
     // TODO: Destructure the tuple into (name, balance) and format the result
     // Expected format: "Wallet <name> has balance: <balance> BTC"
-    todo!()
+    let name = wallet_info.0;
+    let balance = wallet_info.1;
+
+    format!("Wallet {} has balance: {} BTC", name, balance)
 }
 
 /// Convert BTC to satoshis (1 BTC = 100,000,000 sats).
@@ -168,10 +173,11 @@ pub fn halving_schedule(blocks: &[u64]) -> HashMap<u64, u64> {
     // TODO: For each block: halvings = block / 210_000; reward = base >> halvings
     // TODO: Insert (block, reward) into the result HashMap
     let base_reward = 50 * BTC_TO_SATS;
-    let results = HashMap::new();
+    let mut results = HashMap::new();
     for block in blocks {
         let halvings = block / 210_000;
-        results.insert(*block, base_reward / halvings);
+        let reward = base_reward >> halvings;
+        results.insert(*block, reward);
     }
 
     return results;
@@ -181,6 +187,16 @@ pub fn halving_schedule(blocks: &[u64]) -> HashMap<u64, u64> {
 pub fn find_utxo_with_min_value(utxos: &[Utxo], target: u64) -> Option<Utxo> {
     // TODO: Filter UTXOs to those with value >= target
     // TODO: Return the one with the smallest value, or None if none qualify
+    
+    // let mut current_lowest: Option<Utxo> = None;
+
+    // for utxo in utxos {
+    //     if utxo.value >= target{
+    //         current_lowest = utxo
+    //     }
+    // }
+
+    // if current lowest has not changed return None
     todo!()
 }
 
